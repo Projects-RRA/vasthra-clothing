@@ -39,10 +39,10 @@ export default function Navbar() {
               </div> */}
             <div className="relative">
               <button
-                onClick={() => setDropdownOpen(!dropdownOpen)}
+                // onClick={() => setDropdownOpen(!dropdownOpen)}
                 className="flex items-center space-x-1 hover:text-gray-400"
               >
-                <FaUser /> <span>Username</span>
+                <FaUser /> <span>Login</span>
               </button>
               {dropdownOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white text-black shadow-lg rounded-md">
