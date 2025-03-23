@@ -33,13 +33,15 @@ export default function AuthPage() {
     e.preventDefault();
 
     setToast(null);
-    const endpoint = loginTab ? "/login" : "/api/users/register";
+    const endpoint = loginTab ? "/api/users/login" : "/api/users/register";
+
+    // Prepare request payload
+    const payload = loginTab
+      ? { email: formData.email, password: formData.password } // Only send email & password for login
+      : formData; // Send full formData for registration
 
     try {
-      const res = await axios.post(
-        `http://localhost:8000${endpoint}`,
-        formData
-      );
+      const res = await axios.post(`http://localhost:8000${endpoint}`, payload);
 
       setFormData({
         name: "",
@@ -50,7 +52,8 @@ export default function AuthPage() {
         confirmPassword: "",
       });
 
-      if (res.status === 201) {
+      if (res.status === 201 && !loginTab) {
+        // Registration Success
         setToast({
           title: "Registration Successful",
           description: "Login with Your User ID and Password",
@@ -60,34 +63,44 @@ export default function AuthPage() {
           position: "top-center",
         });
         setLoginTab(true);
+      } else if (res.status === 200 && loginTab) {
+        // Login Success
+        const { message, token, role, userName } = res.data;
+
+        // Store token in local storage
+        localStorage.setItem("authToken", token);
+        localStorage.setItem("role", role);
+        localStorage.setItem("userName", userName);
+
+        setToast({
+          title: "Login Successful",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+          position: "top-center",
+        });
+
+        // Navigate to home page
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 100);
       }
     } catch (error) {
       console.error("Request Error:", error);
 
       const errorMessage =
         error.response?.data?.error || "Something went wrong.";
-
       const errorDescription =
         error.response?.data?.message || "Something went wrong.";
 
-      if (error.status === 422) {
-        setToast({
-          title: errorMessage,
-          description: errorDescription,
-          status: "warning",
-          duration: 5000,
-          isClosable: true,
-          position: "top-center",
-        });
-      } else
-        setToast({
-          title: "Error",
-          description: errorMessage,
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-          position: "top-center",
-        });
+      setToast({
+        title: "Error",
+        description: errorMessage,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "top-center",
+      });
     }
   };
 
@@ -100,7 +113,7 @@ export default function AuthPage() {
             onClick={() => setLoginTab(true)}
             className={`w-1/2 text-center p-2 font-medium ${
               loginTab
-                ? "border-b-2 border-blue-500 text-blue-500"
+                ? "border-b-2 border-gray-900 text-gray-900"
                 : "text-gray-500"
             }`}
           >
@@ -110,7 +123,7 @@ export default function AuthPage() {
             onClick={() => setLoginTab(false)}
             className={`w-1/2 text-center p-2 font-medium ${
               !loginTab
-                ? "border-b-2 border-blue-500 text-blue-500"
+                ? "border-b-2 border-gray-900 text-gray-900"
                 : "text-gray-500"
             }`}
           >
@@ -142,7 +155,7 @@ export default function AuthPage() {
                     value="Seller"
                     checked={formData.role === "Seller"}
                     onChange={handleChange}
-                    className="w-4 h-4"
+                    className="w-4 h-4 accent-gray-900"
                   />
                   <span>Seller</span>
                 </label>
@@ -153,7 +166,7 @@ export default function AuthPage() {
                     value="buyer"
                     checked={formData.role === "buyer"}
                     onChange={handleChange}
-                    className="w-4 h-4"
+                     className="w-4 h-4 accent-gray-900"
                   />
                   <span>Buyer</span>
                 </label>
@@ -231,7 +244,7 @@ export default function AuthPage() {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+            className="w-full bg-gray-900 text-white p-2 rounded"
           >
             {loginTab ? "Login" : "Sign Up"}
           </button>
