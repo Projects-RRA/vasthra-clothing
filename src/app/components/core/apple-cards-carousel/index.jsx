@@ -11,7 +11,7 @@ import {
   IconArrowNarrowRight,
   IconX,
 } from "@tabler/icons-react";
-import { cn } from "@/app/utils";
+import { cn } from "@/app/utils/cssMerge";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import { useOutsideClick } from "@/app/hooks/useOutsideClick";

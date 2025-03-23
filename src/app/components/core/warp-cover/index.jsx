@@ -2,7 +2,7 @@
 import React, { useEffect, useId, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRef } from "react";
-import { cn } from "@/app/utils";
+import { cn } from "@/app/utils/cssMerge";
 import { SparklesCore } from "@/app/components/core/warp-cover/components/sparkles";
 
 export const Cover = ({

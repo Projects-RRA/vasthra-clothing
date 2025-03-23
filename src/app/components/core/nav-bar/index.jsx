@@ -3,8 +3,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { FaShoppingCart, FaUser, FaBars, FaTimes } from "react-icons/fa";
+import { isAuthenticated, logout } from "@/app/utils/authUtils";
 
 export default function Navbar() {
+  const [authenticatedUser, setauthenticatedUser] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [userName, setUserName] = useState(null);
@@ -17,13 +19,11 @@ export default function Navbar() {
     }
   }, []);
 
-  // Logout function
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("userName");
-    setUserName(null);
-    window.location.href = "/login"; // Redirect to login
-  };
+  // CHecking if the user authenticated or not and updating the state
+  useEffect(() => {
+    setauthenticatedUser(isAuthenticated()); // Load user on mount
+  }, []);
+
 
   return (
     <div className="shadow-md sticky top-0 bg-white z-50">
@@ -49,7 +49,7 @@ export default function Navbar() {
 
             {/* User Section */}
             <div className="relative">
-              {userName ? (
+              {authenticatedUser ? (
                 // Show username if logged in
                 <button
                   onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -83,7 +83,7 @@ export default function Navbar() {
                     My Orders
                   </a>
                   <button
-                    onClick={handleLogout}
+                    onClick={logout}
                     className="block px-4 py-2 text-left w-full hover:bg-gray-200"
                   >
                     Logout

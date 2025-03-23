@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { cn } from "@/app/utils";
+import { cn } from "@/app/utils/cssMerge";
 
 export const LayoutGrid = ({
   cards
