@@ -1,28 +1,44 @@
 "use client";
 import Image from "next/image";
-import { useState } from "react";
-import {
-  FaShoppingCart,
-  FaUser,
-  FaBars,
-  FaTimes,
-} from "react-icons/fa";
+import Link from "next/link";
+import { useState, useEffect } from "react";
+import { FaShoppingCart, FaUser, FaBars, FaTimes } from "react-icons/fa";
 
 export default function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false); // State for mobile menu
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [userName, setUserName] = useState(null);
+
+  // Check if user is logged in on component mount
+  useEffect(() => {
+    const storedUser = localStorage.getItem("userName");
+    if (storedUser) {
+      setUserName(storedUser);
+    }
+  }, []);
+
+  // Logout function
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userName");
+    setUserName(null);
+    window.location.href = "/login"; // Redirect to login
+  };
 
   return (
     <div className="shadow-md sticky top-0 bg-white z-50">
       {/* Top Navbar */}
       <div className="bg-gray-900 text-white py-2">
         <div className="container mx-auto flex justify-between items-center px-4">
-          <Image
-            src={"/logo/logo-white.png"}
-            width={100}
-            height={50}
-            alt="Vasthra Logo"
-          />
+          <a href="/">
+            <Image
+              src={"/logo/logo-white.png"}
+              width={100}
+              height={50}
+              alt="Vasthra Logo"
+            />
+          </a>
+
           <div className="flex items-center space-x-4">
             <a
               href="#"
@@ -30,31 +46,48 @@ export default function Navbar() {
             >
               <FaShoppingCart /> <span>Cart (0)</span>
             </a>
-            {/* Commented Out Wishlist and Search */}
-            {/* <a href="#" className="flex items-center space-x-1 hover:text-gray-400">
-                <FaHeart /> <span>Wishlist (0)</span>
-              </a> */}
-            {/* <div className="relative">
-                <input type="text" placeholder="Search your product" className="w-40 px-2 py-1 rounded border border-gray-300 focus:outline-none" />
-              </div> */}
+
+            {/* User Section */}
             <div className="relative">
-              <button
-                // onClick={() => setDropdownOpen(!dropdownOpen)}
-                className="flex items-center space-x-1 hover:text-gray-400"
-              >
-                <FaUser /> <span>Login</span>
-              </button>
-              {dropdownOpen && (
+              {userName ? (
+                // Show username if logged in
+                <button
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                  className="flex items-center space-x-1 hover:text-gray-400"
+                >
+                  <FaUser /> <span>{userName}</span>
+                </button>
+              ) : (
+                // Show Login button if not logged in
+                <a
+                  href="/login"
+                  className="flex items-center space-x-1 hover:text-gray-400"
+                >
+                  <FaUser /> <span>Login</span>
+                </a>
+              )}
+
+              {/* Dropdown Menu */}
+              {dropdownOpen && userName && (
                 <div className="absolute right-0 mt-2 w-48 bg-white text-black shadow-lg rounded-md">
-                  <a href="#" className="block px-4 py-2 hover:bg-gray-200">
+                  <a
+                    href="/profile"
+                    className="block px-4 py-2 hover:bg-gray-200"
+                  >
                     Profile
                   </a>
-                  <a href="#" className="block px-4 py-2 hover:bg-gray-200">
+                  <a
+                    href="/orders"
+                    className="block px-4 py-2 hover:bg-gray-200"
+                  >
                     My Orders
                   </a>
-                  <a href="#" className="block px-4 py-2 hover:bg-gray-200">
+                  <button
+                    onClick={handleLogout}
+                    className="block px-4 py-2 text-left w-full hover:bg-gray-200"
+                  >
                     Logout
-                  </a>
+                  </button>
                 </div>
               )}
             </div>
@@ -63,7 +96,7 @@ export default function Navbar() {
       </div>
 
       {/* Main Navbar */}
-      <nav className="bg-g border-b border-gray-300">
+      <nav className="bg-white border-b border-gray-300">
         <div className="container mx-auto flex justify-between items-center py-3 px-4">
           {/* Hamburger Button */}
           <button
@@ -138,27 +171,27 @@ export default function Navbar() {
           {/* Desktop Menu */}
           <ul className="hidden md:flex space-x-6">
             <li>
-              <a href="#" className="text-gray-950	 hover:text-gray-600">
+              <a href="#" className="text-gray-950 hover:text-gray-600">
                 Home
               </a>
             </li>
             <li>
-              <a href="#" className="text-gray-950	 hover:text-gray-600">
+              <a href="#" className="text-gray-950 hover:text-gray-600">
                 All Categories
               </a>
             </li>
             <li>
-              <a href="#" className="text-gray-950	 hover:text-gray-600">
+              <a href="#" className="text-gray-950 hover:text-gray-600">
                 New Arrivals
               </a>
             </li>
             <li>
-              <a href="#" className="text-gray-950	 hover:text-gray-600">
+              <a href="#" className="text-gray-950 hover:text-gray-600">
                 Featured Products
               </a>
             </li>
             <li>
-              <a href="#" className="text-gray-950	 hover:text-gray-600">
+              <a href="#" className="text-gray-950 hover:text-gray-600">
                 Electronics
               </a>
             </li>
