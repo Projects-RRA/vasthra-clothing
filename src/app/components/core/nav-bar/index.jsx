@@ -1,29 +1,16 @@
 "use client";
 import Image from "next/image";
-import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useContext } from "react";
 import { FaShoppingCart, FaUser, FaBars, FaTimes } from "react-icons/fa";
-import { isAuthenticated, logout } from "@/app/utils/authUtils";
+import { logout } from "@/app/utils/authUtils";
+import { AuthContext } from "@/app/context/AuthContext";
 
 export default function Navbar() {
-  const [authenticatedUser, setauthenticatedUser] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [userName, setUserName] = useState(null);
 
-  // Check if user is logged in on component mount
-  useEffect(() => {
-    const storedUser = localStorage.getItem("userName");
-    if (storedUser) {
-      setUserName(storedUser);
-    }
-  }, []);
-
-  // CHecking if the user authenticated or not and updating the state
-  useEffect(() => {
-    setauthenticatedUser(isAuthenticated()); // Load user on mount
-  }, []);
-
+  // Getting Authenticated user details through context
+  const { user } = useContext(AuthContext);
 
   return (
     <div className="shadow-md sticky top-0 bg-white z-50">
@@ -49,13 +36,13 @@ export default function Navbar() {
 
             {/* User Section */}
             <div className="relative">
-              {authenticatedUser ? (
+              {user?.name ? (
                 // Show username if logged in
                 <button
                   onClick={() => setDropdownOpen(!dropdownOpen)}
                   className="flex items-center space-x-1 hover:text-gray-400"
                 >
-                  <FaUser /> <span>{userName}</span>
+                  <FaUser /> <span>{user?.name}</span>
                 </button>
               ) : (
                 // Show Login button if not logged in
@@ -68,7 +55,7 @@ export default function Navbar() {
               )}
 
               {/* Dropdown Menu */}
-              {dropdownOpen && userName && (
+              {dropdownOpen && user && (
                 <div className="absolute right-0 mt-2 w-48 bg-white text-black shadow-lg rounded-md">
                   <a
                     href="/profile"

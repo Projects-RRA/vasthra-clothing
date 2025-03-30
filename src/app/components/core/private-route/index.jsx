@@ -1,25 +1,32 @@
-// This file will create a wrapper component that ensures only authenticated users can access certain pages.
 "use client";
-import { useEffect, useState } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useRouter } from "next/navigation";
-import { isAuthenticated } from "@/app/utils/authUtils";
+import { AuthContext } from "@/app/context/AuthContext";
+import Loader from "@/app/components/core/loader";
 
 const PrivateRoute = ({ children }) => {
-  const router = useRouter();
-  const [loading, setLoading] = useState(true);
+    const [loggedInUser, setloggedInUser] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const user = isAuthenticated();
-    if (!user) {
-      router.push("/login"); // Redirect to login if not authenticated
-    } else {
-      setLoading(false);
-    }
-  }, []);
+    const { user } = useContext(AuthContext);
+    const router = useRouter();
 
-  if (loading) return <p>Loading...</p>; // Prevent flickering
+    useEffect(() => {
+        const checkAuth =  () => {
+            const authUser =  user;
+            if (!authUser) {
+                router.push("/login"); // Redirect to login if not authenticated
+            } else {
+                setloggedInUser(authUser);
+            }
+            setLoading(false);
+        };
 
-  return children;
+        checkAuth();
+    }, [router]);
+
+    if (loading) return <Loader />; // ✅ Show loader while checking auth
+    return loggedInUser ? children : null; // ✅ Ensure proper rendering
 };
 
 export default PrivateRoute;
