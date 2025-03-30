@@ -19,6 +19,7 @@ export default function AuthPage() {
   const [passwordError, setPasswordError] = useState("");
   const [toast, setToast] = useState(null);
 
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
@@ -31,78 +32,67 @@ export default function AuthPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     setToast(null);
-    const endpoint = loginTab ? "/api/users/login" : "/api/users/register";
+    const endpoint = loginTab ? "/users/login" : "/users/register";
 
-    // Prepare request payload
     const payload = loginTab
-      ? { email: formData.email, password: formData.password } // Only send email & password for login
-      : formData; // Send full formData for registration
+        ? { email: formData.email, password: formData.password }
+        : formData;
 
     try {
-      const res = await axios.post(`http://localhost:8000${endpoint}`, payload);
-
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        role: "buyer",
-        password: "",
-        confirmPassword: "",
-      });
-
-      if (res.status === 201 && !loginTab) {
-        // Registration Success
-        setToast({
-          title: "Registration Successful",
-          description: "Login with Your User ID and Password",
-          status: "success",
-          duration: 5000,
-          isClosable: true,
-          position: "top-center",
-        });
-        setLoginTab(true);
-      } else if (res.status === 200 && loginTab) {
-        // Login Success
-        const { message, token, role, userName } = res.data;
-
-        // Store token in local storage
-        localStorage.setItem("authToken", token);
-        localStorage.setItem("role", role);
-        localStorage.setItem("userName", userName);
-
-        setToast({
-          title: "Login Successful",
-          status: "success",
-          duration: 5000,
-          isClosable: true,
-          position: "top-center",
+        const res = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}${endpoint}`, payload, {
+            withCredentials: true, // 🔥 Ensures cookies are sent with the request
         });
 
-        // Navigate to home page
-        setTimeout(() => {
-          window.location.href = "/";
-        }, 100);
-      }
+        setFormData({
+            name: "",
+            email: "",
+            phone: "",
+            role: "buyer",
+            password: "",
+            confirmPassword: "",
+        });
+
+        if (res.status === 201 && !loginTab) {
+            setToast({
+                title: "Registration Successful",
+                description: "Login with Your User ID and Password",
+                status: "success",
+                duration: 5000,
+                isClosable: true,
+                position: "top-center",
+            });
+            setLoginTab(true);
+        } else if (res.status === 200 && loginTab) {
+            // ✅ No need to store token manually; it's in HTTP-only cookie now
+            setToast({
+                title: "Login Successful",
+                status: "success",
+                duration: 5000,
+                isClosable: true,
+                position: "top-center",
+            });
+
+            // ✅ Redirect to home page
+            setTimeout(() => {
+                window.location.href = "/";
+            }, 100);
+        }
     } catch (error) {
-      console.error("Request Error:", error);
+        console.error("Request Error:", error);
 
-      const errorMessage =
-        error.response?.data?.error || "Something went wrong.";
-      const errorDescription =
-        error.response?.data?.message || "Something went wrong.";
-
-      setToast({
-        title: "Error",
-        description: errorMessage,
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-        position: "top-center",
-      });
+        const errorMessage = error.response?.data?.error || "Something went wrong.";
+        setToast({
+            title: "Error",
+            description: errorMessage,
+            status: "error",
+            duration: 5000,
+            isClosable: true,
+            position: "top-center",
+        });
     }
-  };
+};
+
 
   return (
     <div className="flex justify-center items-center min-h-screen text-gray-950 bg-gray-100">
