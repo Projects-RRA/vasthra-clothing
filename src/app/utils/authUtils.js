@@ -10,7 +10,7 @@ export const isAuthenticated = async () => {
       }
 
       const data = await response.json();
-      return data.user;
+      return data;
   } catch (error) {
       console.error("Auth check failed:", error);
       return null;
@@ -23,7 +23,7 @@ export const logout = async () => {
           method: "POST",
           credentials: "include", // 🔥 Important: Ensures cookies are cleared
       });
-      window.location.reload();
+      window.location.href = "/login";
   } catch (error) {
       console.error("Logout failed:", error);
   }

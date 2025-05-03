@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { FaShoppingCart, FaUser, FaBars, FaTimes } from "react-icons/fa";
 import { logout } from "@/app/utils/authUtils";
 import { AuthContext } from "@/app/context/AuthContext";
@@ -8,9 +8,15 @@ import { AuthContext } from "@/app/context/AuthContext";
 export default function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [userBasicInfo, setUserBasicInfo] = useState(null);
 
   // Getting Authenticated user details through context
-  const { user } = useContext(AuthContext);
+  const { userDetails } = useContext(AuthContext);
+  useEffect(() => {
+    if (userDetails) {
+      setUserBasicInfo(userDetails.userInfo);
+    }
+  }, [userDetails]);
 
   return (
     <div className="shadow-md sticky top-0 bg-white z-50">
@@ -36,13 +42,13 @@ export default function Navbar() {
 
             {/* User Section */}
             <div className="relative">
-              {user?.name ? (
+              {userDetails ? (
                 // Show username if logged in
                 <button
                   onClick={() => setDropdownOpen(!dropdownOpen)}
                   className="flex items-center space-x-1 hover:text-gray-400"
                 >
-                  <FaUser /> <span>{user?.name}</span>
+                  <FaUser /> <span>{userBasicInfo?.name}</span>
                 </button>
               ) : (
                 // Show Login button if not logged in
@@ -55,7 +61,7 @@ export default function Navbar() {
               )}
 
               {/* Dropdown Menu */}
-              {dropdownOpen && user && (
+              {dropdownOpen && userBasicInfo && (
                 <div className="absolute right-0 mt-2 w-48 bg-white text-black shadow-lg rounded-md">
                   <a
                     href="/profile"

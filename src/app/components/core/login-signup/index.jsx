@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
-import Toast from "../toast/Toast";
+import Toast from "@/app/components/core/toast/Toast";
 
 export default function AuthPage() {
   const [loginTab, setLoginTab] = useState(true);
