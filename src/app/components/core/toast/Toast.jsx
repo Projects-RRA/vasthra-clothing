@@ -1,3 +1,20 @@
+/**
+ * Toast Component
+ * 
+ * Props:
+ * - title (string): The title of the toast.
+ * - description (string): Additional message in the toast.
+ * - status (string): "success" | "error" | "warning" (default: "success").
+ * - duration (number): Auto-close duration in milliseconds (default: 5000).
+ * - isClosable (boolean): If `true`, a close button is shown (default: true).
+ * - position (string): Defines where the toast appears.
+ *    - "top-left"
+ *    - "top-center"
+ *    - "top-right"
+ *    - "bottom-left"
+ *    - "bottom-center"
+ *    - "bottom-right"
+ */
 import React, { useEffect, useState } from "react";
 
 const Toast = ({
@@ -62,11 +79,22 @@ const Toast = ({
   };
 
   const { icon, color } = statusStyles[status] || statusStyles.success;
+  const positionStyle = {
+    top: position.includes("top") ? "1rem" : "auto",
+    bottom: position.includes("bottom") ? "1rem" : "auto",
+    left: position.includes("center")
+      ? "50%"
+      : position.includes("left")
+      ? "1rem"
+      : "auto",
+    right: position.includes("right") ? "1rem" : "auto",
+    transform: position.includes("center") ? "translateX(-50%)" : "none",
+  };
 
   return (
     <div
       className={`fixed flex items-center z-50 w-full max-w-xs p-4 mb-4 rounded-lg shadow ${color}`}
-      style={{ [position.split("-")[0]]: "1rem", [position.split("-")[1]]: "1rem" }}
+      style={positionStyle}
     >
       <div
         className={`inline-flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-lg `}
