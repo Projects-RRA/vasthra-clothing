@@ -125,7 +125,7 @@ export default function Navbar() {
             </li>
             <li>
               <a
-                href="#"
+                href="/categories"
                 className="block p-4 text-gray-800 border-b"
                 onClick={() => setMenuOpen(false)}
               >
@@ -134,29 +134,38 @@ export default function Navbar() {
             </li>
             <li>
               <a
-                href="#"
+                href="/product-listing?products"
                 className="block p-4 text-gray-800 border-b"
                 onClick={() => setMenuOpen(false)}
               >
-                New Arrivals
+                All Products
               </a>
             </li>
             <li>
               <a
-                href="#"
+                href="/product-listing?categoryId=2"
                 className="block p-4 text-gray-800 border-b"
                 onClick={() => setMenuOpen(false)}
               >
-                Featured Products
+                Men
               </a>
             </li>
             <li>
               <a
-                href="#"
+                href="/product-listing?categoryId=3"
                 className="block p-4 text-gray-800 border-b"
                 onClick={() => setMenuOpen(false)}
               >
-                Electronics
+                Women
+              </a>
+            </li>
+            <li>
+              <a
+                href="/product-listing?categoryId=4"
+                className="block p-4 text-gray-800 border-b"
+                onClick={() => setMenuOpen(false)}
+              >
+                Kids
               </a>
             </li>
           </ul>
@@ -164,28 +173,43 @@ export default function Navbar() {
           {/* Desktop Menu */}
           <ul className="hidden md:flex space-x-6">
             <li>
-              <a href="#" className="text-gray-950 hover:text-gray-600">
-                Home
-              </a>
-            </li>
-            <li>
-              <a href="#" className="text-gray-950 hover:text-gray-600">
+              <a
+                href="/categories"
+                className="text-gray-950 hover:text-gray-600"
+              >
                 All Categories
               </a>
             </li>
             <li>
-              <a href="#" className="text-gray-950 hover:text-gray-600">
-                New Arrivals
+              <a
+                href="/product-listing?products"
+                className="text-gray-950 hover:text-gray-600"
+              >
+                All Products
               </a>
             </li>
             <li>
-              <a href="#" className="text-gray-950 hover:text-gray-600">
-                Featured Products
+              <a
+                href="/product-listing?categoryId=2"
+                className="text-gray-950 hover:text-gray-600"
+              >
+                Men
               </a>
             </li>
             <li>
-              <a href="#" className="text-gray-950 hover:text-gray-600">
-                Electronics
+              <a
+                href="/product-listing?categoryId=3"
+                className="text-gray-950 hover:text-gray-600"
+              >
+                Women
+              </a>
+            </li>
+            <li>
+              <a
+                href="/product-listing?categoryId=4"
+                className="text-gray-950 hover:text-gray-600"
+              >
+                Kids
               </a>
             </li>
           </ul>
