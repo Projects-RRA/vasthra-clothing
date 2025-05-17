@@ -3,7 +3,6 @@ import { useState, useContext, useEffect } from "react";
 import { AuthContext } from "@/app/context/AuthContext";
 import Loader from "../components/core/loader";
 import Toast from "@/app/components/core/toast/Toast";
-import { logout } from "@/app/utils/authUtils";
 import BasicInfo from "./components/basicInfo";
 import AddressList from "./components/addressList";
 import PasswordReset from "./components/passwordReset";

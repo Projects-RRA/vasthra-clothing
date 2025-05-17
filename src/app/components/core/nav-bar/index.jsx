@@ -4,6 +4,7 @@ import { useState, useContext, useEffect } from "react";
 import { FaShoppingCart, FaUser, FaBars, FaTimes } from "react-icons/fa";
 import { logout } from "@/app/utils/authUtils";
 import { AuthContext } from "@/app/context/AuthContext";
+import { useCart } from "@/app/context/CartContext";
 
 export default function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -12,6 +13,7 @@ export default function Navbar() {
 
   // Getting Authenticated user details through context
   const { userDetails } = useContext(AuthContext);
+  const { cartCount } = useCart();
   useEffect(() => {
     if (userDetails) {
       setUserBasicInfo(userDetails.userInfo);
@@ -34,10 +36,10 @@ export default function Navbar() {
 
           <div className="flex items-center space-x-4">
             <a
-              href="#"
+              href="/cart"
               className="flex items-center space-x-1 hover:text-gray-400"
             >
-              <FaShoppingCart /> <span>Cart (0)</span>
+              <FaShoppingCart /> <span>Cart ({cartCount})</span>
             </a>
 
             {/* User Section */}
