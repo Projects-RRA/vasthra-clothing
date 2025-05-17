@@ -1,12 +1,12 @@
 import { getProductById } from "@/app/utils/productUtils";
 import { getUserFromServer } from "@/app/utils/getUserFromServer";
+import AddToCartButton from "@/app/components/core/add-to-cart-button";
 
 export default async function ProductDetailPage({ params }) {
   const { productId } = await params;
   const product = await getProductById(productId);
 
   const user = await getUserFromServer();
-  
 
   if (!product) {
     return (
@@ -68,9 +68,7 @@ export default async function ProductDetailPage({ params }) {
           </p>
 
           {user?.role === "buyer" && (
-            <button className="w-40 bg-black text-white py-3 rounded hover:bg-gray-800">
-              Add to Cart
-            </button>
+            <AddToCartButton className="w-40 py-3" productId={product.id} />
           )}
         </div>
       </div>

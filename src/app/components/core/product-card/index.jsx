@@ -1,8 +1,9 @@
 "use client";
 import React from "react";
 import Link from "next/link";
+import AddToCartButton from "../add-to-cart-button";
 
-export default function ProductCard({ product,user }) {
+export default function ProductCard({ product, user }) {
   return (
     <div className="bg-white shadow-md rounded-xl overflow-hidden">
       <Link href={`/product/${product.id}`}>
@@ -23,11 +24,7 @@ export default function ProductCard({ product,user }) {
         <p className="text-green-700 font-semibold mt-2 text-lg">
           ₹ {parseFloat(product.price).toFixed(2)}
         </p>
-        {user?.role === "buyer" && (
-          <button className="mt-4 w-full bg-black text-white py-2 rounded hover:bg-gray-800">
-            Add to Cart
-          </button>
-        )}
+        {user?.role === "buyer" && <AddToCartButton className="w-full mt-4 py-2" productId={product.id} />}
       </div>
     </div>
   );
