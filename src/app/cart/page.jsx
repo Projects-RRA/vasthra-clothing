@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useCart } from "@/app/context/CartContext";
 import Modal from "@/app/components/core/modal";
 import Link from "next/link";
@@ -11,11 +11,17 @@ import {
 } from "@/app/utils/cartUtils";
 import { FaTrash } from "react-icons/fa";
 import Toast from "@/app/components/core/toast/Toast";
+import Loader from "@/app/components/core/loader";
 
 export default function CartPage() {
   const { cartItems, loadCart } = useCart();
   const [toast, setToast] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => setLoading(false), 2000);
+  }, []);
 
   const handleQuantityChange = async (productId, newQty) => {
     if (newQty < 1) {
@@ -38,13 +44,17 @@ export default function CartPage() {
   const handleClearCart = async () => {
     await clearCart();
     await loadCart();
-    setShowDeleteModal(false)
+    setShowDeleteModal(false);
   };
 
   const totalAmount = cartItems.reduce(
     (acc, item) => acc + item.quantity * parseFloat(item.price),
     0
   );
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <div className="container mx-auto px-4 py-8 mt-10 min-h-[50vh]">
@@ -138,10 +148,11 @@ export default function CartPage() {
                 ₹ {totalAmount.toFixed(2)}
               </span>
             </p>
-
-            <button className="w-full bg-black text-white py-2 rounded hover:bg-gray-800 transition">
-              Checkout
-            </button>
+            <a href="/checkout">
+              <button className="w-full bg-black text-white py-2 rounded hover:bg-gray-800 transition">
+                Checkout
+              </button>
+            </a>
           </div>
         </div>
       )}
@@ -167,7 +178,7 @@ export default function CartPage() {
           </button>
         </div>
       </Modal>
-      {toast && <Toast key={toast.title} {...toast} />}
+      {toast && <Toast key={toast.id} {...toast} />}
     </div>
   );
 }
