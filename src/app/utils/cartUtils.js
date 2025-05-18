@@ -40,6 +40,7 @@ export const addToCart = async (productId, quantity = 1, setToast) => {
 
     if (setToast) {
       setToast({
+        id: Date.now(),
         title: "Added to Cart",
         description: "Product successfully added to cart.",
         status: "success",
@@ -53,6 +54,7 @@ export const addToCart = async (productId, quantity = 1, setToast) => {
   } catch (err) {
     if (setToast) {
       setToast({
+        id: Date.now(),
         title: "Error",
         description: err.message || "Could not add item to cart.",
         status: "error",
@@ -67,7 +69,6 @@ export const addToCart = async (productId, quantity = 1, setToast) => {
 };
 
 export const updateCartItem = async (productId, newQuantity, setToast) => {
-  setToast(null);
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/cart/updateItem`,
@@ -76,7 +77,7 @@ export const updateCartItem = async (productId, newQuantity, setToast) => {
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include", // equivalent to axios's withCredentials: true
+        credentials: "include",
         body: JSON.stringify({
           product_id: productId,
           quantity: newQuantity,
@@ -84,24 +85,41 @@ export const updateCartItem = async (productId, newQuantity, setToast) => {
       }
     );
 
-    if (!response.ok) {
-      throw new Error("Failed to update cart item");
+    const data = await response.json(); // Always attempt to parse the response
+
+    if (!response.ok || data.status === "out_of_stock") {
+      setToast({
+        id: Date.now(),
+        title: "Cart Update Failed",
+        description:
+          data.message || "Something went wrong while updating the cart.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top-center",
+      });
+      throw new Error(data.message || "Cart update failed");
     }
 
-    const data = await response.json();
+    // Success case
     setToast({
+      id: Date.now(),
       title: "Cart Updated.",
-      description: "The item quantity has been successfully updated.",
+      description:
+        data.message || "The item quantity has been successfully updated.",
       status: "success",
       duration: 3000,
       isClosable: true,
       position: "top-center",
     });
-    return data; // success message or updated cart
+
+    return data;
   } catch (error) {
+    // Catch fetch-level or parsing errors
     setToast({
-      title: "Error.",
-      description: `Error updating cart item .${error}`,
+      id: Date.now(),
+      title: "Error",
+      description: error.message || "Error updating cart item.",
       status: "error",
       duration: 3000,
       isClosable: true,
@@ -128,6 +146,7 @@ export const deleteCartItem = async (productId, setToast) => {
     const data = await res.json();
 
     setToast({
+      id: Date.now(),
       title: "Item removed.",
       description: "Item removed from cart.",
       status: "success",
@@ -140,6 +159,7 @@ export const deleteCartItem = async (productId, setToast) => {
   } catch (error) {
     console.error("Error deleting item:", error);
     setToast({
+      id: Date.now(),
       title: "Error",
       status: "failure",
       description: "Failed to remove item. Please try again.",
@@ -150,10 +170,13 @@ export const deleteCartItem = async (productId, setToast) => {
 
 export const clearCart = async () => {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/cart/clearCart`, {
-      method: "DELETE",
-      credentials: "include",
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/cart/clearCart`,
+      {
+        method: "DELETE",
+        credentials: "include",
+      }
+    );
     if (!res.ok) throw new Error("Failed to clear cart");
     return await res.json();
   } catch (error) {

@@ -93,7 +93,7 @@ const Toast = ({
 
   return (
     <div
-      className={`fixed flex items-center z-50 w-full max-w-xs p-4 mb-4 rounded-lg shadow ${color}`}
+      className={`fixed flex items-center z-50 w-full max-w-xs p-4 mb-4 rounded-lg shadow ${color} CustomToast`}
       style={positionStyle}
     >
       <div
