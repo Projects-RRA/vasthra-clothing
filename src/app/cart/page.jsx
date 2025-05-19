@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useCart } from "@/app/context/CartContext";
+import { AuthContext } from "@/app/context/AuthContext";
 import Modal from "@/app/components/core/modal";
 import Link from "next/link";
 import {
@@ -12,12 +13,30 @@ import {
 import { FaTrash } from "react-icons/fa";
 import Toast from "@/app/components/core/toast/Toast";
 import Loader from "@/app/components/core/loader";
+import { useRouter } from "next/navigation";
 
 export default function CartPage() {
   const { cartItems, loadCart } = useCart();
+  const { userDetails } = useContext(AuthContext);
+  const router = useRouter();
+
   const [toast, setToast] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [loading, setLoading] = useState(true);
+
+  const [isSeller, setisSeller] = useState(false);
+
+  useEffect(() => {
+    if (userDetails?.userInfo.role === "seller") {
+      setisSeller(true);
+    }
+  }, [userDetails]);
+
+  useEffect(() => {
+    if (isSeller) {
+      router.replace("/");
+    }
+  }, [isSeller, router]);
 
   useEffect(() => {
     setTimeout(() => setLoading(false), 2000);

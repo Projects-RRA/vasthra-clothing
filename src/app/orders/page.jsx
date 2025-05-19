@@ -1,12 +1,31 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import Link from "next/link";
 import { fetchOrders } from "@/app/utils/orderUtils";
 import Loader from "@/app/components/core/loader";
+import { AuthContext } from "@/app/context/AuthContext";
+import { useRouter } from "next/navigation";
 
 export default function OrderHistoryPage() {
+  const { userDetails } = useContext(AuthContext);
+  const router = useRouter();
+
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const [isSeller, setisSeller] = useState(false);
+
+  useEffect(() => {
+    if (userDetails?.userInfo.role === "seller") {
+      setisSeller(true);
+    }
+  }, [userDetails]);
+
+  useEffect(() => {
+    if (isSeller) {
+      router.replace("/");
+    }
+  }, [isSeller, router]);
 
   useEffect(() => {
     const loadOrders = async () => {

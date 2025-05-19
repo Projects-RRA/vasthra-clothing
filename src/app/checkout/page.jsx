@@ -10,13 +10,26 @@ import Loader from "@/app/components/core/loader";
 export default function CheckoutPage() {
   const { cartItems } = useCart();
   const { userDetails } = useContext(AuthContext);
-  const [toast, setToast] = useState(null);
   const router = useRouter();
 
+  const [toast, setToast] = useState(null);
   const [addresses, setAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [selectedPayment, setSelectedPayment] = useState("cod");
   const [loading, setLoading] = useState(true);
+  const [isSeller, setisSeller] = useState(false);
+
+  useEffect(() => {
+    if (userDetails?.userInfo.role === "seller") {
+      setisSeller(true);
+    }
+  }, [userDetails]);
+
+  useEffect(() => {
+    if (isSeller) {
+      router.replace("/");
+    }
+  }, [isSeller, router]);
 
   useEffect(() => {
     setTimeout(() => setLoading(false), 2000);

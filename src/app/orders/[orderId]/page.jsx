@@ -1,13 +1,32 @@
 "use client";
-import { use, useEffect, useState } from "react";
+import { use, useEffect, useState, useContext } from "react";
 import { fetchOrderById } from "@/app/utils/orderUtils";
 import Loader from "@/app/components/core/loader";
+import { AuthContext } from "@/app/context/AuthContext";
+import { useRouter } from "next/navigation";
 
 export default function OrderDetailsPage({ params }) {
   const { orderId } = use(params);
+  const { userDetails } = useContext(AuthContext);
+  const router = useRouter();
+
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+
+  const [isSeller, setisSeller] = useState(false);
+
+  useEffect(() => {
+    if (userDetails?.userInfo.role === "seller") {
+      setisSeller(true);
+    }
+  }, [userDetails]);
+
+  useEffect(() => {
+    if (isSeller) {
+      router.replace("/");
+    }
+  }, [isSeller, router]);
 
   useEffect(() => {
     const loadOrder = async () => {

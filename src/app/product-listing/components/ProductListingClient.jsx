@@ -2,14 +2,49 @@
 import React, { useState, useEffect } from "react";
 import ProductCard from "@/app/components/core/product-card";
 import Loader from "@/app/components/core/loader";
+import { getSellerProducts } from "@/app/utils/sellerUtils";
+import { useRouter } from "next/navigation";
 
 export default function ProductListingClient({
-  products,
+  products: initialProducts,
   categoryId,
   isFeatured,
-  user
+  user,
+  seller,
 }) {
   const [loading, setLoading] = useState(true);
+  const [products, setProducts] = useState(initialProducts);
+  const [isSeller, setisSeller] = useState(false);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    if (user?.role === "seller") {
+      setisSeller(true);
+    }
+  }, [user]);
+
+  // Un comment if you want redirection optiob for the seller
+  // useEffect(() => {
+  //   if (isSeller) {
+  //     router.replace("/product-listing?seller=true");
+  //   }
+  // }, [isSeller, router]);
+
+  useEffect(() => {
+    async function fetchSellerProducts() {
+      try {
+        const sellerProducts = await getSellerProducts();
+        setProducts(sellerProducts);
+      } catch (error) {
+        console.error("Error fetching seller products:", error);
+      }
+    }
+
+    if (seller) {
+      fetchSellerProducts();
+    }
+  }, [seller]);
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 500);
