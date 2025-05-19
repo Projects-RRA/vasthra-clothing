@@ -1,15 +1,36 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { FocusCards } from "@/app/components/core/focus-cards";
 import { getCategories } from "@/app/utils/productUtils";
-import Loader from "../components/core/loader";
+import Loader from "@/app/components/core/loader";
+import { AuthContext } from "@/app/context/AuthContext";
+import { useRouter } from "next/navigation";
 
 export default function FocusCardsDemo() {
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const { userDetails } = useContext(AuthContext);
+  const router = useRouter();
+
   useEffect(() => {
     setTimeout(() => setLoading(false), 4000);
   }, []);
+
+  const [isSeller, setisSeller] = useState(false);
+
+  useEffect(() => {
+    if (userDetails?.userInfo.role === "seller") {
+      setisSeller(true);
+    }
+  }, [userDetails]);
+
+  useEffect(() => {
+    if (isSeller) {
+      router.replace("/product-listing?seller=true");
+    }
+  }, [isSeller, router]);
+
   useEffect(() => {
     const fetchCategories = async () => {
       const categories = await getCategories();

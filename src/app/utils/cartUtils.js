@@ -7,7 +7,9 @@ export const fetchCartItems = async () => {
       }
     );
 
-    if (!res.ok) throw new Error("Failed to fetch cart");
+    if (!res.ok){
+      console.log("Failed to fetch cart");
+    }
 
     const data = await res.json();
     return data.cart || [];
@@ -141,7 +143,9 @@ export const deleteCartItem = async (productId, setToast) => {
       }
     );
 
-    if (!res.ok) throw new Error("Failed to delete item");
+    if (!res.ok) {
+      console.log("Failed to delete item");
+    }
 
     const data = await res.json();
 

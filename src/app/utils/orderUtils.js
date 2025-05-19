@@ -33,7 +33,9 @@ export const fetchOrders = async () => {
       { credentials: "include" }
     );
 
-    if (!res.ok) throw new Error("Failed to fetch orders");
+    if (!res.ok) {
+      console.log("Failed to fetch orders");
+    }
     const data = await res.json();
     return data.orders || [];
   } catch (error) {

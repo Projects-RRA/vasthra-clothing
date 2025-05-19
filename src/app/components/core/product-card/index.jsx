@@ -4,6 +4,8 @@ import Link from "next/link";
 import AddToCartButton from "../add-to-cart-button";
 
 export default function ProductCard({ product, user }) {
+  // console.log("Rinith--->", product);
+  
   return (
     <div className="bg-white shadow-md rounded-xl overflow-hidden">
       <Link href={`/product/${product.id}`}>

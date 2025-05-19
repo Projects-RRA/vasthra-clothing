@@ -1,134 +1,101 @@
-/**
- * Toast Component
- * 
- * Props:
- * - title (string): The title of the toast.
- * - description (string): Additional message in the toast.
- * - status (string): "success" | "error" | "warning" (default: "success").
- * - duration (number): Auto-close duration in milliseconds (default: 5000).
- * - isClosable (boolean): If `true`, a close button is shown (default: true).
- * - position (string): Defines where the toast appears.
- *    - "top-left"
- *    - "top-center"
- *    - "top-right"
- *    - "bottom-left"
- *    - "bottom-center"
- *    - "bottom-right"
- */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
+import {
+  FaCheckCircle,
+  FaTimesCircle,
+  FaExclamationTriangle,
+  FaInfoCircle,
+} from 'react-icons/fa';
+
+const iconMap = {
+  success: <FaCheckCircle className="text-green-400 text-xl" />,
+  error: <FaTimesCircle className="text-red-400 text-xl" />,
+  warning: <FaExclamationTriangle className="text-yellow-400 text-xl" />,
+  info: <FaInfoCircle className="text-blue-400 text-xl" />,
+};
 
 const Toast = ({
-  title = "",
-  description = "",
-  status = "success",
+  id,
+  title,
+  description,
+  status = 'info',
   duration = 5000,
+  position = 'top-right',
   isClosable = true,
-  position = "top-right",
+  onClose,
 }) => {
+  const [progress, setProgress] = useState(100);
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
-    if (duration > 0) {
-      const timer = setTimeout(() => setVisible(false), duration);
-      return () => clearTimeout(timer);
-    }
-  }, [duration]);
+    const start = Date.now();
+
+    const interval = setInterval(() => {
+      const elapsed = Date.now() - start;
+      const percentLeft = 100 - (elapsed / duration) * 100;
+      setProgress(percentLeft);
+    }, 50);
+
+    const timeout = setTimeout(() => {
+      clearInterval(interval);
+      setVisible(false);
+      onClose?.(id);
+    }, duration);
+
+    return () => {
+      clearInterval(interval);
+      clearTimeout(timeout);
+    };
+  }, [duration, id, onClose]);
 
   if (!visible) return null;
 
-  const statusStyles = {
-    success: {
-      icon: (
-        <svg
-          className="w-5 h-5 SUcceSS Toat"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="green"
-          viewBox="0 0 20 20"
-        >
-          <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
-        </svg>
-      ),
-      color: "text-green-500 bg-green-100",
-    },
-    error: {
-      icon: (
-        <svg
-          className="w-5 h-5"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="currentColor"
-          viewBox="0 0 20 20"
-        >
-          <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 11.793a1 1 0 1 1-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 0 1-1.414-1.414L8.586 10 6.293 7.707a1 1 0 0 1 1.414-1.414L10 8.586l2.293-2.293a1 1 0 0 1 1.414 1.414L11.414 10l2.293 2.293Z" />
-        </svg>
-      ),
-      color: "text-red-500 bg-red-100",
-    },
-    warning: {
-      icon: (
-        <svg
-          className="w-5 h-5"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="currentColor"
-          viewBox="0 0 20 20"
-        >
-          <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM10 15a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm1-4a1 1 0 0 1-2 0V6a1 1 0 0 1 2 0v5Z" />
-        </svg>
-      ),
-      color: "text-orange-500 bg-orange-100",
-    },
-  };
-
-  const { icon, color } = statusStyles[status] || statusStyles.success;
-  const positionStyle = {
-    top: position.includes("top") ? "1rem" : "auto",
-    bottom: position.includes("bottom") ? "1rem" : "auto",
-    left: position.includes("center")
-      ? "50%"
-      : position.includes("left")
-      ? "1rem"
-      : "auto",
-    right: position.includes("right") ? "1rem" : "auto",
-    transform: position.includes("center") ? "translateX(-50%)" : "none",
-  };
+  const positionClass = {
+    'top-right': 'top-5 right-5',
+    'top-left': 'top-5 left-5',
+    'bottom-right': 'bottom-5 right-5',
+    'bottom-left': 'bottom-5 left-5',
+    'top-center': 'top-5 left-1/2 -translate-x-1/2',
+    'bottom-center': 'bottom-5 left-1/2 -translate-x-1/2',
+  }[position] || 'top-5 right-5';
 
   return (
     <div
-      className={`fixed flex items-center z-50 w-full max-w-xs p-4 mb-4 rounded-lg shadow ${color} CustomToast`}
-      style={positionStyle}
+      className={`fixed z-50 max-w-sm w-full p-4 rounded-xl text-white transition-all
+        ${positionClass}
+        bg-gray-800 shadow-2xl ring-1 ring-white/10`}
     >
-      <div
-        className={`inline-flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-lg `}
-      >
-        {icon}
-        <span className="sr-only">{status} icon</span>
-      </div>
-      <div className="ml-3 text-sm font-normal">
-        <strong>{title}</strong>
-        <div>{description}</div>
-      </div>
-      {isClosable && (
-        <button
-          type="button"
-          className={`ml-auto -mx-1.5 -my-1.5 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5  inline-flex items-center justify-center h-8 w-8 hover:text-black ${color}`}
-          onClick={() => setVisible(false)}
-          aria-label="Close"
-        >
-          <svg
-            className="w-3 h-3"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 14 14"
+      <div className="flex items-start gap-3">
+        {iconMap[status]}
+        <div className="flex-1">
+          <h4 className="font-semibold">{title}</h4>
+          {description && <p className="text-sm opacity-90">{description}</p>}
+        </div>
+        {isClosable && (
+          <button
+            className="text-xl font-bold hover:opacity-70"
+            onClick={() => {
+              setVisible(false);
+              onClose?.(id);
+            }}
           >
-            <path
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-            />
-          </svg>
-        </button>
-      )}
+            ×
+          </button>
+        )}
+      </div>
+      <div className="h-1 mt-3 w-full bg-white/20 rounded overflow-hidden">
+        <div
+          className={`h-full transition-all duration-100 ease-linear ${
+            status === 'success'
+              ? 'bg-green-400'
+              : status === 'error'
+              ? 'bg-red-400'
+              : status === 'warning'
+              ? 'bg-yellow-400'
+              : 'bg-blue-400'
+          }`}
+          style={{ width: `${progress}%` }}
+        />
+      </div>
     </div>
   );
 };

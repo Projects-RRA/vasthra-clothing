@@ -7,7 +7,8 @@ import ProductListingClient from "./components/ProductListingClient";
 import { getUserFromServer } from "@/app/utils/getUserFromServer";
 
 export default async function ProductListingPage({ searchParams }) {
-  const { categoryId, isFeatured } = await searchParams;
+  const { categoryId, isFeatured, seller } = await searchParams;
+
   const user = await getUserFromServer();
 
   let products = [];
@@ -27,6 +28,7 @@ export default async function ProductListingPage({ searchParams }) {
       categoryId={categoryId}
       isFeatured={isFeatured}
       user={user}
+      seller={seller}
     />
   );
 }

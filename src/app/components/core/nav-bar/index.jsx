@@ -10,6 +10,7 @@ export default function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [userBasicInfo, setUserBasicInfo] = useState(null);
+  const [isSeller, setisSeller] = useState(false);
 
   // Getting Authenticated user details through context
   const { userDetails } = useContext(AuthContext);
@@ -17,6 +18,9 @@ export default function Navbar() {
   useEffect(() => {
     if (userDetails) {
       setUserBasicInfo(userDetails.userInfo);
+    }
+    if (userDetails?.userInfo.role === "seller") {
+      setisSeller(true);
     }
   }, [userDetails]);
 
@@ -35,12 +39,14 @@ export default function Navbar() {
           </a>
 
           <div className="flex items-center space-x-4">
-            <a
-              href="/cart"
-              className="flex items-center space-x-1 hover:text-gray-400"
-            >
-              <FaShoppingCart /> <span>Cart ({cartCount})</span>
-            </a>
+            {!isSeller && (
+              <a
+                href="/cart"
+                className="flex items-center space-x-1 hover:text-gray-400"
+              >
+                <FaShoppingCart /> <span>Cart ({cartCount})</span>
+              </a>
+            )}
 
             {/* User Section */}
             <div className="relative">
@@ -71,12 +77,14 @@ export default function Navbar() {
                   >
                     Profile
                   </a>
-                  <a
-                    href="/orders"
-                    className="block px-4 py-2 hover:bg-gray-200"
-                  >
-                    My Orders
-                  </a>
+                  {!isSeller && (
+                    <a
+                      href="/orders"
+                      className="block px-4 py-2 hover:bg-gray-200"
+                    >
+                      My Orders
+                    </a>
+                  )}
                   <button
                     onClick={logout}
                     className="block px-4 py-2 text-left w-full hover:bg-gray-200"
@@ -116,24 +124,18 @@ export default function Navbar() {
                 <FaTimes />
               </button>
             </div>
-            <li>
-              <a
-                href="#"
-                className="block p-4 text-gray-800 border-b"
-                onClick={() => setMenuOpen(false)}
-              >
-                Home
-              </a>
-            </li>
-            <li>
-              <a
-                href="/categories"
-                className="block p-4 text-gray-800 border-b"
-                onClick={() => setMenuOpen(false)}
-              >
-                All Categories
-              </a>
-            </li>
+            {!isSeller && (
+              <li>
+                <a
+                  href="/categories"
+                  className="block p-4 text-gray-800 border-b"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  All Categories
+                </a>
+              </li>
+            )}
+
             <li>
               <a
                 href="/product-listing?products"
@@ -143,45 +145,88 @@ export default function Navbar() {
                 All Products
               </a>
             </li>
-            <li>
-              <a
-                href="/product-listing?categoryId=2"
-                className="block p-4 text-gray-800 border-b"
-                onClick={() => setMenuOpen(false)}
-              >
-                Men
-              </a>
-            </li>
-            <li>
-              <a
-                href="/product-listing?categoryId=3"
-                className="block p-4 text-gray-800 border-b"
-                onClick={() => setMenuOpen(false)}
-              >
-                Women
-              </a>
-            </li>
-            <li>
-              <a
-                href="/product-listing?categoryId=4"
-                className="block p-4 text-gray-800 border-b"
-                onClick={() => setMenuOpen(false)}
-              >
-                Kids
-              </a>
-            </li>
+
+            {!isSeller && (
+              <li>
+                <a
+                  href="/product-listing?categoryId=2"
+                  className="block p-4 text-gray-800 border-b"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Men
+                </a>
+              </li>
+            )}
+            {!isSeller && (
+              <li>
+                <a
+                  href="/product-listing?categoryId=3"
+                  className="block p-4 text-gray-800 border-b"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Women
+                </a>
+              </li>
+            )}
+            {!isSeller && (
+              <li>
+                <a
+                  href="/product-listing?categoryId=4"
+                  className="block p-4 text-gray-800 border-b"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Kids
+                </a>
+              </li>
+            )}
+            {isSeller && (
+              <li>
+                <a
+                  href="/product-listing/?seller=trues"
+                  className="block p-4 text-gray-800 border-b"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  My Products
+                </a>
+              </li>
+            )}
+            {isSeller && (
+              <li>
+                <a
+                  href="/add-product"
+                  className="block p-4 text-gray-800 border-b"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Add Products
+                </a>
+              </li>
+            )}
+            {isSeller && (
+              <li>
+                <a
+                  href="/manage-product"
+                  className="block p-4 text-gray-800 border-b"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Manage Products
+                </a>
+              </li>
+            )}
           </ul>
 
           {/* Desktop Menu */}
           <ul className="hidden md:flex space-x-6">
-            <li>
-              <a
-                href="/categories"
-                className="text-gray-950 hover:text-gray-600"
-              >
-                All Categories
-              </a>
-            </li>
+            {!isSeller && (
+              <li>
+                <a
+                  href="/categories"
+                  className="text-gray-950 hover:text-gray-600"
+                >
+                  All Categories
+                </a>
+              </li>
+            )}
+
             <li>
               <a
                 href="/product-listing?products"
@@ -190,30 +235,67 @@ export default function Navbar() {
                 All Products
               </a>
             </li>
-            <li>
-              <a
-                href="/product-listing?categoryId=2"
-                className="text-gray-950 hover:text-gray-600"
-              >
-                Men
-              </a>
-            </li>
-            <li>
-              <a
-                href="/product-listing?categoryId=3"
-                className="text-gray-950 hover:text-gray-600"
-              >
-                Women
-              </a>
-            </li>
-            <li>
-              <a
-                href="/product-listing?categoryId=4"
-                className="text-gray-950 hover:text-gray-600"
-              >
-                Kids
-              </a>
-            </li>
+
+            {!isSeller && (
+              <li>
+                <a
+                  href="/product-listing?categoryId=2"
+                  className="text-gray-950 hover:text-gray-600"
+                >
+                  Men
+                </a>
+              </li>
+            )}
+            {!isSeller && (
+              <li>
+                <a
+                  href="/product-listing?categoryId=3"
+                  className="text-gray-950 hover:text-gray-600"
+                >
+                  Women
+                </a>
+              </li>
+            )}
+            {!isSeller && (
+              <li>
+                <a
+                  href="/product-listing?categoryId=4"
+                  className="text-gray-950 hover:text-gray-600"
+                >
+                  Kids
+                </a>
+              </li>
+            )}
+            {isSeller && (
+              <li>
+                <a
+                  href="/product-listing/?seller=true"
+                  className="text-gray-950 hover:text-gray-600"
+                >
+                  My Products
+                </a>
+              </li>
+            )}
+            {isSeller && (
+              <li>
+                <a
+                  href="/add-product"
+                  className="text-gray-950 hover:text-gray-600"
+                >
+                  Add Products
+                </a>
+              </li>
+            )}
+            {isSeller && (
+              <li>
+                <a
+                  href="/manage-product"
+                  className="text-gray-950 hover:text-gray-600"
+                >
+                  Manage Products
+                </a>
+              </li>
+            )}
           </ul>
         </div>
       </nav>
