@@ -2,20 +2,14 @@
 import React, { useEffect, useState, useContext } from "react";
 import { FocusCards } from "@/app/components/core/focus-cards";
 import { getCategories } from "@/app/utils/productUtils";
-import Loader from "@/app/components/core/loader";
 import { AuthContext } from "@/app/context/AuthContext";
 import { useRouter } from "next/navigation";
 
 export default function FocusCardsDemo() {
   const [cards, setCards] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   const { userDetails } = useContext(AuthContext);
   const router = useRouter();
-
-  useEffect(() => {
-    setTimeout(() => setLoading(false), 4000);
-  }, []);
 
   const [isSeller, setisSeller] = useState(false);
 
@@ -48,5 +42,5 @@ export default function FocusCardsDemo() {
     fetchCategories();
   }, []);
 
-  return <>{loading ? <Loader /> : <FocusCards cards={cards} />}</>;
+  return <FocusCards cards={cards} />;
 }

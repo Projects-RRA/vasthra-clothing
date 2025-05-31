@@ -5,7 +5,6 @@ import { AuthContext } from "@/app/context/AuthContext";
 import Toast from "@/app/components/core/toast/Toast";
 import { placeOrder } from "@/app/utils/orderUtils";
 import { useRouter } from "next/navigation";
-import Loader from "@/app/components/core/loader";
 
 export default function CheckoutPage() {
   const { cartItems } = useCart();
@@ -16,7 +15,6 @@ export default function CheckoutPage() {
   const [addresses, setAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [selectedPayment, setSelectedPayment] = useState("cod");
-  const [loading, setLoading] = useState(true);
   const [isSeller, setisSeller] = useState(false);
 
   useEffect(() => {
@@ -31,9 +29,6 @@ export default function CheckoutPage() {
     }
   }, [isSeller, router]);
 
-  useEffect(() => {
-    setTimeout(() => setLoading(false), 2000);
-  }, []);
 
   useEffect(() => {
     if (userDetails) {
@@ -61,7 +56,6 @@ export default function CheckoutPage() {
         paymentMethod: selectedPayment,
       });
 
-      console.log("Order placed:", response);
       setToast({
         id: Date.now(),
         title: "Order Placed.",
@@ -84,9 +78,6 @@ export default function CheckoutPage() {
     0
   );
 
-  if (loading) {
-    return <Loader />;
-  }
 
   return (
     <div className="bg-gray-50 min-h-screen py-10 px-4 md:px-16">

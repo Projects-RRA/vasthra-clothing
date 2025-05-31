@@ -10,8 +10,14 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     isAuthenticated()
-      .then((userData) => setUserDetails(userData), setLoading(false))
-      .catch(() => setUserDetails(null));
+      .then((userData) => {
+        setUserDetails(userData);
+        setLoading(false);
+      })
+      .catch(() => {
+        setUserDetails(null);
+        setLoading(false);
+      });
   }, []);
 
   return (

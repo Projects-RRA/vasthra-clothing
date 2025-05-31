@@ -2,7 +2,6 @@
 import { useEffect, useState, useContext } from "react";
 import Link from "next/link";
 import { fetchOrders } from "@/app/utils/orderUtils";
-import Loader from "@/app/components/core/loader";
 import { AuthContext } from "@/app/context/AuthContext";
 import { useRouter } from "next/navigation";
 
@@ -11,7 +10,6 @@ export default function OrderHistoryPage() {
   const router = useRouter();
 
   const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   const [isSeller, setisSeller] = useState(false);
 
@@ -31,13 +29,10 @@ export default function OrderHistoryPage() {
     const loadOrders = async () => {
       const data = await fetchOrders();
       setOrders(data);
-      setLoading(false);
     };
     loadOrders();
   }, []);
-  if (loading) {
-    return <Loader />;
-  }
+
 
   return (
     <div className="max-w-5xl mx-auto p-4 min-h-[55vh]">
