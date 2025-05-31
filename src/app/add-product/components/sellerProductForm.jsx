@@ -16,7 +16,7 @@ const categoryIdToAudience = {
   4: "Kids",
 };
 
-const sizes = ["XS", "S", "M", "L", "XL"];
+const sizes = ["S", "M", "L", "XL"];
 
 export default function UploadProduct() {
   const router = useRouter();
@@ -52,6 +52,8 @@ export default function UploadProduct() {
       ...formData,
       target_audience: targetAudience,
     };
+    console.log("Rinith--->", payload);
+    
 
     const res = await uploadProduct(payload);
 

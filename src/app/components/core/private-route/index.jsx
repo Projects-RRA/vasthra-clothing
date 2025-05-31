@@ -5,21 +5,19 @@ import { AuthContext } from "@/app/context/AuthContext";
 import Loader from "@/app/components/core/loader";
 
 const PrivateRoute = ({ children }) => {
-  const [loading, setLoading] = useState(true);
-  const { userDetails } = useContext(AuthContext);
+  const { userDetails, loading } = useContext(AuthContext);
   const router = useRouter();
 
   useEffect(() => {
-    if (!userDetails || !userDetails.userInfo?.name) {
-      // Not authenticated 
+    if (!loading && (!userDetails || !userDetails.userInfo?.name)) {
       router.push("/login");
-    } else {
-      // Authenticated 
-      setLoading(false);
     }
-  }, [userDetails, router]);
+  }, [loading, userDetails, router]);
 
-  if (loading) return <Loader />;
+  if (loading || !userDetails || !userDetails.userInfo?.name) {
+    return <Loader />;
+  }
+
   return children;
 };
 

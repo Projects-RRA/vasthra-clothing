@@ -13,7 +13,7 @@ export default function Navbar() {
   const [isSeller, setisSeller] = useState(false);
 
   // Getting Authenticated user details through context
-  const { userDetails } = useContext(AuthContext);
+  const { userDetails, loading } = useContext(AuthContext);
   const { cartCount } = useCart();
   useEffect(() => {
     if (userDetails) {
@@ -23,6 +23,7 @@ export default function Navbar() {
       setisSeller(true);
     }
   }, [userDetails]);
+
 
   return (
     <div className="shadow-md sticky top-0 bg-white z-50">
@@ -39,7 +40,7 @@ export default function Navbar() {
           </a>
 
           <div className="flex items-center space-x-4">
-            {!isSeller && (
+            {!isSeller && !loading &&  (
               <a
                 href="/cart"
                 className="flex items-center space-x-1 hover:text-gray-400"
@@ -99,206 +100,209 @@ export default function Navbar() {
       </div>
 
       {/* Main Navbar */}
-      <nav className="bg-white border-b border-gray-300">
-        <div className="container mx-auto flex justify-between items-center py-3 px-4">
-          {/* Hamburger Button */}
-          <button
-            className="md:hidden text-xl text-slate-900"
-            onClick={() => setMenuOpen(!menuOpen)}
-          >
-            {menuOpen ? <FaTimes /> : <FaBars />}
-          </button>
+      {!loading && (
+        <nav className="bg-white border-b border-gray-300">
+          <div className="container mx-auto flex justify-between items-center py-3 px-4">
+            {/* Hamburger Button */}
+            <button
+              className="md:hidden text-xl text-slate-900"
+              onClick={() => setMenuOpen(!menuOpen)}
+            >
+              {menuOpen ? <FaTimes /> : <FaBars />}
+            </button>
 
-          {/* Mobile Menu */}
-          <ul
-            className={`fixed left-0 top-0 w-full h-full bg-white z-50 transform ${
-              menuOpen ? "translate-x-0" : "-translate-x-full"
-            } transition-transform duration-300 md:hidden`}
-          >
-            <div className="flex justify-between items-center p-4">
-              <h2 className="text-lg font-bold text-slate-900">Menu</h2>
-              <button
-                className="text-2xl text-slate-900"
-                onClick={() => setMenuOpen(false)}
-              >
-                <FaTimes />
-              </button>
-            </div>
-            {!isSeller && (
-              <li>
-                <a
-                  href="/categories"
-                  className="block p-4 text-gray-800 border-b"
+            {/* Mobile Menu */}
+            <ul
+              className={`fixed left-0 top-0 w-full h-full bg-white z-50 transform ${
+                menuOpen ? "translate-x-0" : "-translate-x-full"
+              } transition-transform duration-300 md:hidden`}
+            >
+              <div className="flex justify-between items-center p-4">
+                <h2 className="text-lg font-bold text-slate-900">Menu</h2>
+                <button
+                  className="text-2xl text-slate-900"
                   onClick={() => setMenuOpen(false)}
                 >
-                  All Categories
-                </a>
-              </li>
-            )}
+                  <FaTimes />
+                </button>
+              </div>
+              {!isSeller && (
+                <li>
+                  <a
+                    href="/categories"
+                    className="block p-4 text-gray-800 border-b"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    All Categories
+                  </a>
+                </li>
+              )}
 
-            <li>
-              <a
-                href="/product-listing?products"
-                className="block p-4 text-gray-800 border-b"
-                onClick={() => setMenuOpen(false)}
-              >
-                All Products
-              </a>
-            </li>
+              <li>
+                <a
+                  href="/product-listing?products"
+                  className="block p-4 text-gray-800 border-b"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  All Products
+                </a>
+              </li>
 
-            {!isSeller && (
-              <li>
-                <a
-                  href="/product-listing?categoryId=2"
-                  className="block p-4 text-gray-800 border-b"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  Men
-                </a>
-              </li>
-            )}
-            {!isSeller && (
-              <li>
-                <a
-                  href="/product-listing?categoryId=3"
-                  className="block p-4 text-gray-800 border-b"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  Women
-                </a>
-              </li>
-            )}
-            {!isSeller && (
-              <li>
-                <a
-                  href="/product-listing?categoryId=4"
-                  className="block p-4 text-gray-800 border-b"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  Kids
-                </a>
-              </li>
-            )}
-            {isSeller && (
-              <li>
-                <a
-                  href="/product-listing/?seller=trues"
-                  className="block p-4 text-gray-800 border-b"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  My Products
-                </a>
-              </li>
-            )}
-            {isSeller && (
-              <li>
-                <a
-                  href="/add-product"
-                  className="block p-4 text-gray-800 border-b"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  Add Products
-                </a>
-              </li>
-            )}
-            {isSeller && (
-              <li>
-                <a
-                  href="/manage-product"
-                  className="block p-4 text-gray-800 border-b"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  Manage Products
-                </a>
-              </li>
-            )}
-          </ul>
+              {!isSeller && (
+                <li>
+                  <a
+                    href="/product-listing?categoryId=2"
+                    className="block p-4 text-gray-800 border-b"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    Men
+                  </a>
+                </li>
+              )}
+              {!isSeller && (
+                <li>
+                  <a
+                    href="/product-listing?categoryId=3"
+                    className="block p-4 text-gray-800 border-b"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    Women
+                  </a>
+                </li>
+              )}
+              {!isSeller && (
+                <li>
+                  <a
+                    href="/product-listing?categoryId=4"
+                    className="block p-4 text-gray-800 border-b"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    Kids
+                  </a>
+                </li>
+              )}
+              {isSeller && (
+                <li>
+                  <a
+                    href="/product-listing/?seller=trues"
+                    className="block p-4 text-gray-800 border-b"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    My Products
+                  </a>
+                </li>
+              )}
+              {isSeller && (
+                <li>
+                  <a
+                    href="/add-product"
+                    className="block p-4 text-gray-800 border-b"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    Add Products
+                  </a>
+                </li>
+              )}
+              {isSeller && (
+                <li>
+                  <a
+                    href="/manage-product"
+                    className="block p-4 text-gray-800 border-b"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    Manage Products
+                  </a>
+                </li>
+              )}
+            </ul>
 
-          {/* Desktop Menu */}
-          <ul className="hidden md:flex space-x-6">
-            {!isSeller && (
-              <li>
-                <a
-                  href="/categories"
-                  className="text-gray-950 hover:text-gray-600"
-                >
-                  All Categories
-                </a>
-              </li>
-            )}
+            {/* Desktop Menu */}
 
-            <li>
-              <a
-                href="/product-listing?products"
-                className="text-gray-950 hover:text-gray-600"
-              >
-                All Products
-              </a>
-            </li>
+            <ul className="hidden md:flex space-x-6">
+              {!isSeller && (
+                <li>
+                  <a
+                    href="/categories"
+                    className="text-gray-950 hover:text-gray-600"
+                  >
+                    All Categories
+                  </a>
+                </li>
+              )}
 
-            {!isSeller && (
               <li>
                 <a
-                  href="/product-listing?categoryId=2"
+                  href="/product-listing?products"
                   className="text-gray-950 hover:text-gray-600"
                 >
-                  Men
+                  All Products
                 </a>
               </li>
-            )}
-            {!isSeller && (
-              <li>
-                <a
-                  href="/product-listing?categoryId=3"
-                  className="text-gray-950 hover:text-gray-600"
-                >
-                  Women
-                </a>
-              </li>
-            )}
-            {!isSeller && (
-              <li>
-                <a
-                  href="/product-listing?categoryId=4"
-                  className="text-gray-950 hover:text-gray-600"
-                >
-                  Kids
-                </a>
-              </li>
-            )}
-            {isSeller && (
-              <li>
-                <a
-                  href="/product-listing/?seller=true"
-                  className="text-gray-950 hover:text-gray-600"
-                >
-                  My Products
-                </a>
-              </li>
-            )}
-            {isSeller && (
-              <li>
-                <a
-                  href="/add-product"
-                  className="text-gray-950 hover:text-gray-600"
-                >
-                  Add Products
-                </a>
-              </li>
-            )}
-            {isSeller && (
-              <li>
-                <a
-                  href="/manage-product"
-                  className="text-gray-950 hover:text-gray-600"
-                >
-                  Manage Products
-                </a>
-              </li>
-            )}
-          </ul>
-        </div>
-      </nav>
+
+              {!isSeller && (
+                <li>
+                  <a
+                    href="/product-listing?categoryId=2"
+                    className="text-gray-950 hover:text-gray-600"
+                  >
+                    Men
+                  </a>
+                </li>
+              )}
+              {!isSeller && (
+                <li>
+                  <a
+                    href="/product-listing?categoryId=3"
+                    className="text-gray-950 hover:text-gray-600"
+                  >
+                    Women
+                  </a>
+                </li>
+              )}
+              {!isSeller && (
+                <li>
+                  <a
+                    href="/product-listing?categoryId=4"
+                    className="text-gray-950 hover:text-gray-600"
+                  >
+                    Kids
+                  </a>
+                </li>
+              )}
+              {isSeller && (
+                <li>
+                  <a
+                    href="/product-listing/?seller=true"
+                    className="text-gray-950 hover:text-gray-600"
+                  >
+                    My Products
+                  </a>
+                </li>
+              )}
+              {isSeller && (
+                <li>
+                  <a
+                    href="/add-product"
+                    className="text-gray-950 hover:text-gray-600"
+                  >
+                    Add Products
+                  </a>
+                </li>
+              )}
+              {isSeller && (
+                <li>
+                  <a
+                    href="/manage-product"
+                    className="text-gray-950 hover:text-gray-600"
+                  >
+                    Manage Products
+                  </a>
+                </li>
+              )}
+            </ul>
+          </div>
+        </nav>
+      )}
     </div>
   );
 }

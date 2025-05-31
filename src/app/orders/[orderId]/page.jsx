@@ -83,10 +83,6 @@ export default function OrderDetailsPage({ params }) {
     order?.address
   );
 
-  if (loading) {
-    return <Loader />;
-  }
-
   return (
     <div className="max-w-6xl mx-auto p-4 text-gray-700 grid grid-cols-1 md:grid-cols-3 gap-6 min-h-[55vh]">
       {/* Left Section - Items */}

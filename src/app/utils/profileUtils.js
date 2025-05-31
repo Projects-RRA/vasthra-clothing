@@ -68,6 +68,7 @@ export const addAddress = async (newAddress, setAddresses, setToast) => {
         description: "Address added successfully",
         status: "success",
         duration: 5000,
+        position: "top-center",
       });
       setAddresses((prevAddresses) => [...prevAddresses, data?.address]);
     }
@@ -77,6 +78,7 @@ export const addAddress = async (newAddress, setAddresses, setToast) => {
       description: "Something went wrong.",
       status: "error",
       duration: 5000,
+      position: "top-center",
     });
   }
 };
@@ -103,6 +105,7 @@ export const updateAddress = async (updatedAddress, setAddresses, setToast) => {
         description: "Address updated successfully",
         status: "success",
         duration: 5000,
+        position: "top-center",
       });
 
       // Update the address in the list (optional, if address list is shown on screen)
@@ -120,6 +123,7 @@ export const updateAddress = async (updatedAddress, setAddresses, setToast) => {
       description: error.message || "Something went wrong.",
       status: "error",
       duration: 5000,
+      position: "top-center",
     });
     return false; 
   }
@@ -144,6 +148,7 @@ export const deleteAddress = async (id, setAddresses, setToast) => {
         description: "Address deleted successfully",
         status: "success",
         duration: 5000,
+        position: "top-center",
       });
     }
   } catch (error) {
@@ -152,6 +157,7 @@ export const deleteAddress = async (id, setAddresses, setToast) => {
       description: "Something went wrong.",
       status: "error",
       duration: 5000,
+      position: "top-center",
     });
   }
 };

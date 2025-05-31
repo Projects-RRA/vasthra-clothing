@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import { updateProduct } from "@/app/utils/sellerUtils";
 import { getProductById } from "@/app/utils/productUtils";
 import Toast from "@/app/components/core/toast/Toast";
-import Loader from "@/app/components/core/loader";
 
 export default function EditProductPage({ params }) {
   const { id: productId } = use(params);
@@ -20,7 +19,7 @@ export default function EditProductPage({ params }) {
     color: "",
     is_active: true,
   });
-  const [loading, setLoading] = useState(true);
+
   const [toast, setToast] = useState(null);
 
   useEffect(() => {
@@ -30,9 +29,7 @@ export default function EditProductPage({ params }) {
         setFormData(data);
       } catch (err) {
         alert(err.message || "Failed to fetch product");
-      } finally {
-        setLoading(false);
-      }
+      } 
     }
 
     fetchProduct();
@@ -58,9 +55,6 @@ export default function EditProductPage({ params }) {
     }
   };
 
-  if (loading) {
-    return <Loader />;
-  }
 
   return (
     <div className="min-h-screen  py-12 px-4 sm:px-6 lg:px-8">
