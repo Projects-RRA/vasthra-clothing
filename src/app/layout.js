@@ -4,6 +4,7 @@ import Navbar from "@/app/components/core/nav-bar";
 import Footer from "@/app/components/core/footer";
 import { CartProvider } from "@/app/context/CartContext";
 import { AuthProvider } from "@/app/context/AuthContext";
+import AppWrapper from "@/app/components/core/app-wrapper";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -22,7 +23,7 @@ export default function RootLayout({ children }) {
         <AuthProvider>
           <CartProvider>
             <Navbar />
-            {children}
+            <AppWrapper>{children}</AppWrapper>
             <Footer />
           </CartProvider>
         </AuthProvider>
